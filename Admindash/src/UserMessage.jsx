@@ -15,7 +15,7 @@ function UserMessage() {
     const fetchMessages = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://mytrend.onrender.com/api/messages');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_API_URL + '/messages');
         setMessages(response.data);
       } catch (error) {
         setError('Failed to fetch messages.');
@@ -47,7 +47,7 @@ function UserMessage() {
       setCurrentMessageId(null);
 
       try {
-        await axios.post('https://mytrend.onrender.com/api/reply', {
+        const response = await axios.post(import.meta.env.VITE_BACKEND_API_URL + '/reply', {
           email: currentMessage.email,
           message: replyMessage,
         });
