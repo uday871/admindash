@@ -11,20 +11,13 @@ function UserMessage() {
   const [currentMessageId, setCurrentMessageId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch API URL from environment variable
-  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-
   useEffect(() => {
     const fetchMessages = async () => {
       setIsLoading(true);
       try {
-        // Log the API URL to make sure it's correct
-        console.log('API URL:', apiUrl);
-        
-        const response = await axios.get(`${apiUrl}/messages`);
+        const response = await axios.get('https://mytrend.onrender.com/api/messages');
         setMessages(response.data);
       } catch (error) {
-        console.error('Error fetching messages:', error); // Log errors for debugging
         setError('Failed to fetch messages.');
       } finally {
         setIsLoading(false);
@@ -32,7 +25,7 @@ function UserMessage() {
     };
 
     fetchMessages();
-  }, [apiUrl]);
+  }, []);
 
   const handleReplyChange = useCallback((event) => {
     setReplyMessage(event.target.value);
@@ -42,6 +35,7 @@ function UserMessage() {
     const currentMessage = messages.find((msg) => msg._id === currentMessageId);
 
     if (currentMessage) {
+      // Optimistic UI Update: Immediately update the UI
       const updatedMessages = messages.map((msg) =>
         msg._id === currentMessageId
           ? { ...msg, replySent: true } 
@@ -53,7 +47,7 @@ function UserMessage() {
       setCurrentMessageId(null);
 
       try {
-        await axios.post(`${apiUrl}/reply`, {
+        await axios.post('https://mytrend.onrender.com/api/reply', {
           email: currentMessage.email,
           message: replyMessage,
         });
