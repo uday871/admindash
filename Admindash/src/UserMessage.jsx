@@ -11,15 +11,20 @@ function UserMessage() {
   const [currentMessageId, setCurrentMessageId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_BACKEND_API_URL; // Access environment variable
+  // Fetch API URL from environment variable
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
 
   useEffect(() => {
     const fetchMessages = async () => {
       setIsLoading(true);
       try {
+        // Log the API URL to make sure it's correct
+        console.log('API URL:', apiUrl);
+        
         const response = await axios.get(`${apiUrl}/messages`);
         setMessages(response.data);
       } catch (error) {
+        console.error('Error fetching messages:', error); // Log errors for debugging
         setError('Failed to fetch messages.');
       } finally {
         setIsLoading(false);
